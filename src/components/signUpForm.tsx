@@ -161,7 +161,12 @@ const SignUpForm: FC<SignUpFormProps> = ({}) => {
             <FormItem>
               <FormLabel>Role</FormLabel>
               <FormControl className={errors.role && 'outline-red-500'}>
-                <Select disabled={loading} required {...field}>
+                <Select
+                  onValueChange={field.onChange}
+                  disabled={loading}
+                  required
+                  {...field}
+                >
                   <SelectTrigger className="w-64">
                     <SelectValue placeholder="Account role" />
                   </SelectTrigger>
@@ -181,7 +186,7 @@ const SignUpForm: FC<SignUpFormProps> = ({}) => {
           )}
         />
         <div className="pt-2 flex items-center justify-between">
-          <Button type="submit" disabled={loading} className="cursor-pointer">
+          <Button type="submit" disabled={loading}>
             Sign up
           </Button>
           <p className="text-sm text-muted-foreground">

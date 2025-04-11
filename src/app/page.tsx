@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { supabase } from '@/supabaseClient'
+import { getUser } from '@/lib/actions/getUser'
 import Link from 'next/link'
 
 export default async function Home() {
-  const user = (await supabase.auth.getUser()).data.user
+  const user = await getUser()
 
   return (
     <div>
@@ -23,14 +23,14 @@ export default async function Home() {
       </p>
       {user ? (
         <Link href={'/projects'}>
-          <Button type="button" className="my-4 cursor-pointer">
+          <Button type="button" className="my-4">
             To projects
           </Button>
         </Link>
       ) : (
         <div className="flex items-center gap-x-2">
           <Link href={'/signup'}>
-            <Button type="button" className="my-4 cursor-pointer">
+            <Button type="button" className="my-4">
               Sign up
             </Button>
           </Link>
@@ -38,7 +38,7 @@ export default async function Home() {
             <Button
               type="button"
               variant={'outline'}
-              className="my-4 cursor-pointer"
+              className="my-4"
             >
               Sign in
             </Button>

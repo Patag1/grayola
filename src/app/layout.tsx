@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { cookies } from 'next/headers'
 import { Toaster } from '@/components/ui/sonner'
+import { Card } from '@/components/ui/card'
+import { signOut } from '@/lib/actions/authSupabase'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -24,6 +26,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieStore = await cookies()
+  const sessionCookie = cookieStore.get('session')?.value
+  const parsedSession = sessionCookie ? JSON.parse(sessionCookie) : null
+
+  if (
+    parsedSession &&
+    (parsedSession.date - Date.now()) / (1000 * 60 * 60 * 24) > 7
+  ) {
+    cookieStore.delete('session')
+  }
+
+  if (!parsedSession) await signOut()
+
   return (
     <html lang="en">
       <body
@@ -34,26 +49,23 @@ export default async function RootLayout({
           flex
           justify-center
           py-16
+          select-none
       `}
       >
-        <main
+        <Card
           className="
             grid
             grid-cols-1
             md:grid-cols-[1fr_auto_1fr]
             px-16
             py-12
-            md:border
-            border-dashed
-            border-neutral-400
-            rounded-lg
           "
         >
           <div />
           {children}
           <Toaster />
           <div />
-        </main>
+        </Card>
       </body>
     </html>
   )

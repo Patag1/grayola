@@ -96,7 +96,7 @@ const EditProjectForm: FC<EditProjectFormProps> = ({}) => {
                   placeholder="E-commerce"
                   disabled={loading}
                   required
-                  className={errors.title && 'outline-red-500'}
+                  className={`w-64 ${errors.title && 'outline-red-500'}`}
                   {...field}
                 />
               </FormControl>
@@ -115,7 +115,9 @@ const EditProjectForm: FC<EditProjectFormProps> = ({}) => {
                   placeholder="Describe your project to our staff"
                   disabled={loading}
                   required
-                  className={`relative ${errors.title && 'outline-red-500'}`}
+                  className={`relative w-64 ${
+                    errors.title && 'outline-red-500'
+                  }`}
                   maxLength={500}
                   {...field}
                 >

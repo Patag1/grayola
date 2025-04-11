@@ -1,17 +1,15 @@
 import { BriefcaseBusiness } from 'lucide-react'
 import Link from 'next/link'
 import SignOutBtn from './signOutBtn'
-import { supabase } from '@/supabaseClient'
-import { redirect } from 'next/navigation'
 import { Button } from './ui/button'
+import { User } from '@prisma/client'
+import { FC } from 'react'
 
-const navbar = async () => {
-  const { data, error } = await supabase.auth.getSession()
+interface navbarProps {
+  user: User | null
+}
 
-  if (error) redirect('/signin')
-
-  const role = data.session?.user.role
-
+const navbar: FC<navbarProps> = async ({ user }) => {
   return (
     <nav
       className="
@@ -23,20 +21,22 @@ const navbar = async () => {
       px-6
       border-b
       bg-white
-      flex
+      grid
+      grid-cols-3
       items-center
-      justify-between
     "
     >
-      <Link href="/projects" className="flex items-center gap-x-2">
+      <Link href="/projects" className="flex items-center gap-x-6">
         <BriefcaseBusiness />
-        <h2 className="text-2xl font-bold">Augusto GTA</h2>
-        <span className="text-muted-foreground text-sm">
+        <h2 className="text-2xl m-0 p-0 font-bold">Augusto GTA</h2>
+      </Link>
+      <div className="flex items-center justify-center">
+        <span className="text-muted-foreground text-xs">
           Grayola Test Assessment
         </span>
-      </Link>
-      <div className="space-x-2">
-        {role === 'client' && (
+      </div>
+      <div className="flex items-center justify-end space-x-2">
+        {user && user.role === 'client' && (
           <Link href="/new-project">
             <Button type="button">New project</Button>
           </Link>

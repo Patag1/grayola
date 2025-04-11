@@ -130,7 +130,7 @@ const SignInForm: FC<SignInFormProps> = ({}) => {
           )}
         />
         <div className="pt-2 flex items-center justify-between">
-          <Button type="submit" disabled={loading} className="cursor-pointer">
+          <Button type="submit" disabled={loading}>
             Sign in
           </Button>
           <p className="text-sm text-muted-foreground">

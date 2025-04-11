@@ -3,11 +3,14 @@ import CreateProjectForm from '@/components/createProjectForm'
 
 const page = async () => {
   return (
-    <>
-      <h1>Create new project</h1>
-      <Separator className='my-4' />
+    <div>
+      <h1 className="text-2xl mb-2">Create new project</h1>
+      <p className="text-muted-foreground text-sm">
+        And let our staff know what you want to build
+      </p>
+      <Separator className="my-4" />
       <CreateProjectForm />
-    </>
+    </div>
   )
 }
 

@@ -14,33 +14,37 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   if (publicRoutes.includes(pathname)) {
+    console.log('NONONONONONONONONONONONONONONONO')
     return NextResponse.next()
   }
 
-  const token = req.cookies.get('supabase-auth-token')?.value
+  const { data } = await supabase.auth.getSession()
 
-  if (!token) {
+  if (!data.session) {
+    console.log('NANANANANANANANANANANANANANANNA')
     return NextResponse.redirect(new URL('/signin', req.nextUrl.origin))
   }
 
-  // Valida el token y obtiene el usuario desde Supabase
   const {
     data: { user },
     error,
-  } = await supabase.auth.getUser(token)
+  } = await supabase.auth.getUser(data.session?.access_token)
 
   if (error || !user) {
+    console.log('NENENENENENENENENENENENENENENENE')
     return NextResponse.redirect(new URL('/signin', req.nextUrl.origin))
   }
 
   const role = user.user_metadata.role
 
   if (!role || !routesByRole[role]) {
+    console.log('NININININININININININININININININI')
     return NextResponse.redirect(new URL('/404', req.nextUrl.origin))
   }
 
   const allowedRoutes = routesByRole[role]
   if (!allowedRoutes.some((route) => pathname.includes(route))) {
+    console.log('NUNUNUNUNUNUNUNUNUNUNUNUNUNUNUNUNUNU')
     return NextResponse.redirect(new URL('/projects', req.nextUrl.origin))
   }
 
@@ -53,4 +57,4 @@ export const config = {
     '/projects/new-project',
     '/projects/[projectId]',
   ],
-};
+}
