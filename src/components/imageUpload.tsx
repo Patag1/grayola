@@ -27,7 +27,10 @@ const ImageUpload: FC<ImageUploadProps> = ({
   }, [])
 
   const onUpload = (result: any) => {
-    onChange(result.info.secure_url)
+    // const url = result?.info?.secure_url
+    console.log(result)
+
+    // url ? onChange(url) : console.error('Error uploading image')
   }
 
   if (!mounted) return null
@@ -35,28 +38,29 @@ const ImageUpload: FC<ImageUploadProps> = ({
   return (
     <div>
       <div className="flex items-center gap-4">
-        {value && value.map((url, i) => (
-          <div
-            key={i}
-            className="relative w-[200px] h-[200px] rounded-md overflow-hidden"
-          >
-            <div className="z-10 absolute top-2 right-2">
-              <Button
-                type="button"
-                size="icon"
-                variant="destructive"
-                onClick={() => onRemove(url)}
-              >
-                <Trash className="w-4 h-4" />
-              </Button>
+        {value &&
+          value.map((url, i) => (
+            <div
+              key={i}
+              className="relative w-[200px] h-[200px] rounded-md overflow-hidden"
+            >
+              <div className="z-10 absolute top-2 right-2">
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="destructive"
+                  onClick={() => onRemove(url)}
+                >
+                  <Trash className="w-4 h-4" />
+                </Button>
+              </div>
+              <Image src={url} alt={url} fill className="object-cover" />
             </div>
-            <Image src={url} alt={url} fill className="object-cover" />
-          </div>
-        ))}
+          ))}
       </div>
       <CldUploadWidget
+        signatureEndpoint={'/api/sign-cloudinary-params'}
         onUploadAdded={onUpload}
-        signatureEndpoint="/api/sign-image"
         {...props}
       >
         {({ open }) => {

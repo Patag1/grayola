@@ -20,10 +20,12 @@ const navbar: FC<navbarProps> = async ({ user }) => {
       py-4
       px-6
       border-b
-      bg-white
+      bg-white/75
+      backdrop-filter backdrop-blur-sm
       grid
       grid-cols-3
       items-center
+      z-50
     "
     >
       <Link href="/projects" className="flex items-center gap-x-6">

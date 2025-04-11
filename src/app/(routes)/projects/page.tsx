@@ -8,19 +8,11 @@ import {
 } from '@/components/ui/card'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Eye, Pencil } from 'lucide-react'
+import { Pencil } from 'lucide-react'
 import DelProjectBtn from '@/components/delProjectBtn'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
 import Image from 'next/image'
 import { getUser } from '@/lib/actions/getUser'
+import { Separator } from '@/components/ui/separator'
 
 const page = async () => {
   const user = await getUser()
@@ -33,76 +25,45 @@ const page = async () => {
   })
 
   return (
-    <div>
+    <div className="flex justify-center items-center flex-col">
       {projects.length ? (
         projects.map((p, i) => (
-          <Card key={i}>
+          <Card key={i} className="max-w-prose">
             <CardHeader className="flex items-center justify-between">
-              <CardTitle>{p.title}</CardTitle>
-              <div className="flex items-center gap-x-2">
-                <Dialog>
-                  <DialogTrigger>
-                    <Button type="button">
-                      <Eye />
+              <CardTitle className="uppercase">{p.title}</CardTitle>
+              {user && user.role === 'pm' && (
+                <div className="flex items-center gap-x-2">
+                  <Link href={`/projects/${p.id}`}>
+                    <Button type="button" variant='outline'>
+                      <Pencil />
                     </Button>
-                  </DialogTrigger>
-                  <DialogHeader>
-                    <DialogTitle>{p.title}</DialogTitle>
-                    <DialogDescription className="space-x-2">
-                      <div>
-                        <p>Client: {p.creator.email.split('@')[0]}</p>
-                        <p>contact: {p.creator.email}</p>
-                      </div>
-                      {p.assignee && (
-                        <div>
-                          <p>Designer: {p.assignee.email.split('@')[0]}</p>
-                          <p>contact: {p.assignee.email}</p>
-                        </div>
-                      )}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogContent>
-                    <p>{p.desc}</p>
-                  </DialogContent>
-                  <DialogFooter className="space-x-2">
-                    {p.files.map((file, i) => (
-                      <Image
-                        key={i}
-                        src={file}
-                        alt={file}
-                        width={24}
-                        height={24}
-                        className="rounded-full"
-                      />
-                    ))}
-                  </DialogFooter>
-                </Dialog>
-                {user && user.role === 'pm' && (
-                  <>
-                    <Link href={`/projects/${p.id}`}>
-                      <Button type="button">
-                        <Pencil />
-                      </Button>
-                    </Link>
-                    <DelProjectBtn projectId={p.id} />
-                  </>
-                )}
-              </div>
+                  </Link>
+                  <DelProjectBtn projectId={p.id} />
+                </div>
+              )}
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-3">
+              <div className="grid grid-cols-[1fr_auto] gap-x-2">
                 <p className="columns-2">{p.desc}</p>
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-y-2">
                   {p.files.map((f, i) => (
-                    <div key={i}>{f}</div>
+                    <Image
+                      key={i}
+                      src={f}
+                      alt="f"
+                      width={64}
+                      height={64}
+                      className="aspect-square overflow-hidden border rounded-full"
+                    />
                   ))}
                 </div>
               </div>
             </CardContent>
-            <CardFooter className="flex items-center gap-x-2">
+            <Separator />
+            <CardFooter className="flex items-center gap-x-2 text-sm">
               <div className="flex flex-col">
                 <p>Creator: {p.creator.email.split('@')[0]}</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground">
                   contact: {p.creator.email}
                 </p>
               </div>

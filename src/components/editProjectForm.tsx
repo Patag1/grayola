@@ -175,11 +175,11 @@ const EditProjectForm: FC<EditProjectFormProps> = ({ project, designers }) => {
           name="assignee"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="assignee">Images</FormLabel>
+              <FormLabel htmlFor="assignee">Assign to</FormLabel>
               <FormControl>
                 <Select {...register('assignee')} {...field}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Assign to" />
+                    <SelectValue placeholder="Designer" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>

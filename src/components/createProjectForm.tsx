@@ -17,10 +17,12 @@ import {
 } from '@/components/ui/form'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
-import { Project, User } from '@prisma/client'
 import ImageUpload from '@/components/imageUpload'
+import { User } from '@prisma/client'
 
-interface EditProjectFormProps {}
+interface CreateProjectFormProps {
+  user: User | null
+}
 
 const formSchema = z.object({
   title: z.string().min(5).max(50),
@@ -28,14 +30,14 @@ const formSchema = z.object({
   files: z.object({ url: z.string() }).array(),
 })
 
-type EditProjectFormValues = z.infer<typeof formSchema>
+type CreateProjectFormValues = z.infer<typeof formSchema>
 
-const EditProjectForm: FC<EditProjectFormProps> = ({}) => {
+const CreateProjectForm: FC<CreateProjectFormProps> = ({ user }) => {
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
 
-  const form = useForm<EditProjectFormValues>({
+  const form = useForm<CreateProjectFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
@@ -53,11 +55,11 @@ const EditProjectForm: FC<EditProjectFormProps> = ({}) => {
     watch,
   } = form
 
-  const onSubmitPut = async (data: EditProjectFormValues) => {
+  const onSubmitPut = async (data: CreateProjectFormValues) => {
     setLoading(true)
 
     try {
-      const res = await axios.post('/project', data)
+      const res = await axios.post('/project', { ...data, user })
       if (res.status === 200) {
         toast.success('Project created successfully', {
           description: 'Standby until our staff takes a look at your project',
@@ -110,25 +112,24 @@ const EditProjectForm: FC<EditProjectFormProps> = ({}) => {
             <FormItem>
               <FormLabel htmlFor="desc">Description</FormLabel>
               <FormControl>
-                <Textarea
-                  {...register('desc')}
-                  placeholder="Describe your project to our staff"
-                  disabled={loading}
-                  required
-                  className={`relative w-64 ${
-                    errors.title && 'outline-red-500'
-                  }`}
-                  maxLength={500}
-                  {...field}
-                >
+                <div className="relative">
+                  <Textarea
+                    {...register('desc')}
+                    placeholder="Describe your project to our staff"
+                    disabled={loading}
+                    required
+                    className={`w-96 h-32 ${errors.title && 'outline-red-500'}`}
+                    maxLength={500}
+                    {...field}
+                  />
                   <span
-                    className={`absolute bottom-1 right-1 ${
+                    className={`absolute bottom-0.5 left-0.5 text-muted-foreground text-xs transition-colors font-mono tabular-nums px-0.5 bg-white/50 rounded-4xl pointer-events-none ${
                       descChars >= 500 && 'text-red-500'
                     }`}
                   >
                     {descChars}/500
                   </span>
-                </Textarea>
+                </div>
               </FormControl>
             </FormItem>
           )}
@@ -165,4 +166,4 @@ const EditProjectForm: FC<EditProjectFormProps> = ({}) => {
   )
 }
 
-export default EditProjectForm
+export default CreateProjectForm
